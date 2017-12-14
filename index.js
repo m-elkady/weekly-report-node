@@ -12,9 +12,6 @@ app.get('/get-login-link', (req, res) => {
 });
 
 
-
-
-
 const server = app.listen(process.env.PORT, () => {
     console.log(`Started on port ${server.address().port}`);
 });
