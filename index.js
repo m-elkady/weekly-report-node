@@ -2,7 +2,7 @@ import express from 'express';
 
 
 const app = express();
-const CLIENT_ID= '03a7700019465888e2af';
+const CLIENT_ID= '828c9f83e4c929dc911f';
 
 app.get('/get-login-link', (req, res) => {
     res.send({
