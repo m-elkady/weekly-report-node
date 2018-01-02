@@ -1,18 +1,18 @@
-import express from 'express';
+const github  = require('octonode');
+const CLIENT_ID = 'xxxxx';
+const CLIENT_SECRET = 'xxxxx';
 
-
-const app = express();
-const CLIENT_ID= '828c9f83e4c929dc911f';
-const CLIENT_SECRET= '394f2034848cd89238d780e0a6bd8e7bce75b1c7';
-
-app.get('/get-login-link', (req, res) => {
-    res.send({
-        url: `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}`
-    });
+const client = github.client({
+    id: CLIENT_ID,
+    secret: CLIENT_SECRET
 });
 
+const ghsearch = client.search();
 
-const server = app.listen(process.env.PORT, () => {
-    console.log(`Started on port ${server.address().port}`);
+ghsearch.issues({
+    q: 'code type:pr',
+    sort: 'created',
+    order: 'asc'
+}, (data) => {
+    console.log(data);
 });
-
