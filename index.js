@@ -1,7 +1,7 @@
 const github = require('octonode');
 const _ = require('lodash');
 
-const CLIENT_ACCESS_TOKEN = 'b8d0bd1d292909f224804d6e596f3b115ea656ad';
+const CLIENT_ACCESS_TOKEN = '244e6c43ff04c8d7e240bcc9d8ce18b25247cf1d';
 
 const client = github.client(CLIENT_ACCESS_TOKEN);
 
@@ -20,6 +20,7 @@ const prsSearch = (users = [], dateRange = {}, status = 'open') => {
         console.log(data);
     });
 };
+// role: author | assignee | reviewed-by | review-requested | commenter | mentions
 const getUsers = (users, role = 'author') => {
     let usersStr = '';
     for (let i = 0; i < users.length; i += 1) {
@@ -27,6 +28,8 @@ const getUsers = (users, role = 'author') => {
     }
     return usersStr;
 };
+
+// type: created | merged | updated
 const getDateRange = (dateRange, type = 'created') => {
     let dateStr = '';
     const from = _.get(dateRange, 'from', '');
