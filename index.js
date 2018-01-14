@@ -1,18 +1,44 @@
-const github  = require('octonode');
-const CLIENT_ID = 'xxxxx';
-const CLIENT_SECRET = 'xxxxx';
+const github = require('octonode');
+const _ = require('lodash');
 
-const client = github.client({
-    id: CLIENT_ID,
-    secret: CLIENT_SECRET
-});
+const CLIENT_ACCESS_TOKEN = 'b8d0bd1d292909f224804d6e596f3b115ea656ad';
 
-const ghsearch = client.search();
+const client = github.client(CLIENT_ACCESS_TOKEN);
 
-ghsearch.issues({
-    q: 'code type:pr',
-    sort: 'created',
-    order: 'asc'
-}, (data) => {
-    console.log(data);
-});
+const tajawalSearch = client.search();
+
+const prsSearch = (users = [], dateRange = {}, status = 'open') => {
+    const usersStr = getUsers(users);
+    const dateStr = getDateRange(dateRange);
+
+    tajawalSearch.issues({
+        q: `org:tajawal type:pr is:${status} ${usersStr} ${dateStr}`,
+        sort: 'created',
+        order: 'asc'
+    }, (err, data) => {
+        console.log(err);
+        console.log(data);
+    });
+};
+const getUsers = (users, role = 'author') => {
+    let usersStr = '';
+    for (let i = 0; i < users.length; i += 1) {
+        usersStr += `${role}:${users[i]} `;
+    }
+    return usersStr;
+};
+const getDateRange = (dateRange, type = 'created') => {
+    let dateStr = '';
+    const from = _.get(dateRange, 'from', '');
+    const to = _.get(dateRange, 'to', '');
+    if (!_.isEmpty(from) && !_.isEmpty(to)) {
+        dateStr = `${type}:${from}..${to}`;
+    } else if (!_.isEmpty(from)) {
+        dateStr = `${type}:>=${from}`;
+    } else if (!_.isEmpty(to)) {
+        dateStr = `${type}:<=${to}`;
+    }
+    return dateStr;
+};
+
+prsSearch(['mohammedelkady', 'ibrahim-sakr'], { from: '2018-01-01', to: '2018-01-30' }, 'open');
